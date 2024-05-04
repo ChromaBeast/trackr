@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "115825736344",
+    "project_id": "goaltracking-e75ff",
+    "storage_bucket": "goaltracking-e75ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:115825736344:android:230e8695e276ccd8096eed",
+        "android_client_info": {
+          "package_name": "com.example.goal_tracking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "115825736344-mejo98uopbrqg055rf3bm5kvkabihokl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHZv1fJUWcvFR_GZLbQRJGARBx3_KJJYw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "115825736344-mejo98uopbrqg055rf3bm5kvkabihokl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
