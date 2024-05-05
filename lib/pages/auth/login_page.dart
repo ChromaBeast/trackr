@@ -21,10 +21,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFB7C391),
       body: Center(
         child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
-            if (state == AuthenticationState.authenticated) {
+            if (state == AuthenticationState.signedin) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => NavigationPage(
@@ -35,50 +36,65 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
           builder: (context, state) {
-            if (state == AuthenticationState.authenticating) {
+            if (state == AuthenticationState.signingin) {
               return const CircularProgressIndicator();
             }
 
-            return Column(
+            return Stack(
               children: [
-                Placeholder(
-                  fallbackHeight: MediaQuery.of(context).size.height * 0.8,
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    border: const Border(
-                      top: BorderSide(
-                        color: Colors.black,
-                      ),
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
-                    color: Colors.grey[900],
+                Positioned(
+                  top: 20,
+                  right: 0,
+                  left: 0,
+                  child: Image.asset(
+                    'assets/images/bg.png',
+                    fit: BoxFit.cover,
                   ),
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text(
-                        'Sign in to Goal Tracker using',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    padding: const EdgeInsets.all(20),
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(50),
+                          topRight: Radius.circular(50),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildGoogleSignInButton(),
-                        ],
-                      ),
-                      //role based login
-                      // role selection
-                    ],
+                        color: Colors.white),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          'Tasker',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          'Know where your time goes, before it goes\n bye-bye.',
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            _buildPhoneButton(),
+                            _buildGoogleSignInButton(),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -96,14 +112,68 @@ class _LoginPageState extends State<LoginPage> {
             .add(GoogleSignInRequested());
       },
       child: Container(
-        padding: const EdgeInsets.all(8),
+        width: MediaQuery.of(context).size.width * 0.5,
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.05),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: const BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
+          color: Color(0xFFEBEFEB),
+          borderRadius: BorderRadius.all(Radius.circular(30)),
         ),
-        child: Image.asset(
-          'assets/images/google.png',
-          height: 30,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset(
+              'assets/images/google.png',
+              height: 30,
+              width: 30,
+            ),
+            Text(
+              'Google',
+              style: TextStyle(
+                color: Colors.grey[800],
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(width: 30),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhoneButton() {
+    return InkWell(
+      onTap: () {
+        // BlocProvider.of<AuthenticationBloc>(context)
+        //     .add(PhoneSignInRequested());
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.5,
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.03),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: const BoxDecoration(
+          color: Color(0xFFB7C391),
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset(
+              'assets/images/login_background.png',
+              height: 30,
+              width: 30,
+            ),
+            const Text(
+              'Phone',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(width: 30),
+          ],
         ),
       ),
     );

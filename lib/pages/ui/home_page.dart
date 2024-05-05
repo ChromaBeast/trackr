@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../splash_screen.dart';
 
@@ -24,8 +25,12 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
+            onPressed: () async {
+              if (FirebaseAuth.instance.currentUser != null) {
+                await GoogleSignIn().signOut();
+                await FirebaseAuth.instance.signOut();
+              }
+
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

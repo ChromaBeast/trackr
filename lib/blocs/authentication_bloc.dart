@@ -8,7 +8,7 @@ class AuthenticationStarted extends AuthenticationEvent {}
 
 class GoogleSignInRequested extends AuthenticationEvent {}
 
-class AnonymousSignInRequested extends AuthenticationEvent {}
+class PhoneSignInRequested extends AuthenticationEvent {}
 
 class SignOutRequested extends AuthenticationEvent {}
 
@@ -17,7 +17,7 @@ class AuthenticationUserChanged extends AuthenticationEvent {
   AuthenticationUserChanged(this.user);
 }
 
-enum AuthenticationState { unauthenticated, authenticating, authenticated }
+enum AuthenticationState { signedout, signingin, signedin, signingout }
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
@@ -25,22 +25,22 @@ class AuthenticationBloc
   final GoogleSignIn _googleSignIn;
 
   AuthenticationBloc(this._firebaseAuth, this._googleSignIn)
-      : super(AuthenticationState.unauthenticated) {
+      : super(AuthenticationState.signedout) {
     on<AuthenticationStarted>((event, emit) async {
-      emit(AuthenticationState.authenticating); // Show a loading state
+      emit(AuthenticationState.signingin); // Show a loading state
 
       // Get the current user from Firebase
       final user = _firebaseAuth.currentUser;
 
       if (user != null) {
-        emit(AuthenticationState.authenticated);
+        emit(AuthenticationState.signedin);
       } else {
-        emit(AuthenticationState.unauthenticated);
+        emit(AuthenticationState.signedout);
       }
     });
 
     on<GoogleSignInRequested>((event, emit) async {
-      emit(AuthenticationState.authenticating);
+      emit(AuthenticationState.signingin);
       try {
         await _googleSignIn.signOut();
         final googleUser = await _googleSignIn.signIn();
@@ -51,27 +51,23 @@ class AuthenticationBloc
         );
         await _firebaseAuth.signInWithCredential(credential);
       } catch (e) {
-        emit(AuthenticationState.unauthenticated);
+        emit(AuthenticationState.signedout);
       }
-      emit(AuthenticationState.authenticated);
+      emit(AuthenticationState.signedin);
     });
 
-    on<AnonymousSignInRequested>((event, emit) async {
-      emit(AuthenticationState.authenticating);
-      try {
-        await _firebaseAuth.signInAnonymously();
-      } catch (e) {
-        emit(AuthenticationState.unauthenticated);
-      }
-      emit(AuthenticationState.authenticated);
+    on<PhoneSignInRequested>((event, emit) async {
+      emit(AuthenticationState.signingin);
+      // Implement phone sign in here
+      emit(AuthenticationState.signedin);
     });
 
     on<AuthenticationUserChanged>((event, emit) {
-      emit(AuthenticationState.authenticated);
+      emit(AuthenticationState.signedin);
     });
 
     on<SignOutRequested>((event, emit) async {
-      emit(AuthenticationState.authenticating);
+      emit(AuthenticationState.signingin);
       if (_firebaseAuth.currentUser != null) {
         if (_firebaseAuth.currentUser!.isAnonymous) {
           await _firebaseAuth.currentUser!.delete();
@@ -80,7 +76,7 @@ class AuthenticationBloc
           await _firebaseAuth.signOut();
         }
       }
-      emit(AuthenticationState.unauthenticated);
+      emit(AuthenticationState.signedout);
     });
   }
 }
