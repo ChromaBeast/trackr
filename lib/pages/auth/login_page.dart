@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
             EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.03),
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: const BoxDecoration(
-          color: Color(0xFFB7C391),
+          color: Color.fromARGB(255, 94, 162, 95),
           borderRadius: BorderRadius.all(Radius.circular(30)),
         ),
         child: Row(
